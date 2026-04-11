@@ -46,6 +46,44 @@ export type Database = {
           },
         ]
       }
+      chequeos_pre_empleo: {
+        Row: {
+          año: number
+          created_at: string | null
+          dia: number
+          drive_url: string
+          id: string
+          mes: number
+          sucursal_id: string
+        }
+        Insert: {
+          año: number
+          created_at?: string | null
+          dia: number
+          drive_url: string
+          id?: string
+          mes: number
+          sucursal_id: string
+        }
+        Update: {
+          año?: number
+          created_at?: string | null
+          dia?: number
+          drive_url?: string
+          id?: string
+          mes?: number
+          sucursal_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chequeos_pre_empleo_sucursal_id_fkey"
+            columns: ["sucursal_id"]
+            isOneToOne: false
+            referencedRelation: "sucursales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       empresas: {
         Row: {
           created_at: string | null
@@ -152,7 +190,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

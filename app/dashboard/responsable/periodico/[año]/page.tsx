@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
-import ResponsableChequeos from './ResponsableChequeos'
+import PeriodicoChequeos from './PeriodicoChequeos'
 
-export default async function ResponsableAñoPage({
+export default async function PeriodicoAñoPage({
   params,
 }: {
   params: Promise<{ año: string }>
@@ -17,5 +17,5 @@ export default async function ResponsableAñoPage({
     .eq('año', año)
     .order('created_at', { ascending: true })
 
-  return <ResponsableChequeos chequeos={chequeos ?? []} año={año} />
+  return <PeriodicoChequeos chequeos={chequeos ?? []} año={año} />
 }

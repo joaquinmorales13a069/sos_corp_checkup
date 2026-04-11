@@ -29,7 +29,7 @@ export async function createChequeo(formData: FormData) {
   }
 
   revalidatePath('/dashboard/admin/chequeos')
-  revalidatePath('/dashboard/responsable')
+  revalidatePath('/dashboard/responsable', 'layout')
 }
 
 export async function updateChequeo(id: string, formData: FormData) {
@@ -59,7 +59,7 @@ export async function updateChequeo(id: string, formData: FormData) {
   }
 
   revalidatePath('/dashboard/admin/chequeos')
-  revalidatePath('/dashboard/responsable')
+  revalidatePath('/dashboard/responsable', 'layout')
 }
 
 export async function deleteChequeo(id: string) {
@@ -68,5 +68,5 @@ export async function deleteChequeo(id: string) {
   if (error) return { error: error.message }
 
   revalidatePath('/dashboard/admin/chequeos')
-  revalidatePath('/dashboard/responsable')
+  revalidatePath('/dashboard/responsable', 'layout')
 }
