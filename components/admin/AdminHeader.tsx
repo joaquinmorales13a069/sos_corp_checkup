@@ -4,10 +4,11 @@ import { usePathname } from 'next/navigation'
 import { LuMenu } from 'react-icons/lu'
 
 const titles: Record<string, string> = {
-  '/dashboard/admin/empresas': 'Empresas',
-  '/dashboard/admin/sucursales': 'Sucursales',
-  '/dashboard/admin/usuarios': 'Usuarios',
-  '/dashboard/admin/chequeos': 'Chequeos',
+  '/dashboard/admin/empresas': 'Administrar Empresas',
+  '/dashboard/admin/sucursales': 'Administrar Sucursales',
+  '/dashboard/admin/usuarios': 'Administrar Usuarios',
+  '/dashboard/admin/pre-empleo': 'Administrar chequeos Pre empleo',
+  '/dashboard/admin/chequeos': 'Administrar chequeos Periódicos',
 }
 
 interface AdminHeaderProps {

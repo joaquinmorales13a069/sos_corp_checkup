@@ -8,12 +8,18 @@ import logo from '@/assets/images/logo-SOSMedical.webp'
 import { LuBuilding2, LuBuilding, LuUsers, LuClipboardCheck, LuUserCheck, LuLogOut, LuX } from 'react-icons/lu'
 import type { IconType } from 'react-icons'
 
-const navItems: { href: string; label: string; icon: IconType }[] = [
-  { href: '/dashboard/admin/empresas', label: 'Empresas', icon: LuBuilding2 },
-  { href: '/dashboard/admin/sucursales', label: 'Sucursales', icon: LuBuilding },
-  { href: '/dashboard/admin/usuarios', label: 'Usuarios', icon: LuUsers },
-  { href: '/dashboard/admin/chequeos', label: 'Chequeos', icon: LuClipboardCheck },
-  { href: '/dashboard/admin/pre-empleo', label: 'Pre Empleo', icon: LuUserCheck },
+type NavLink = { kind: 'link'; href: string; label: string; icon: IconType }
+type NavSeparator = { kind: 'separator'; label: string }
+type NavEntry = NavLink | NavSeparator
+
+const navItems: NavEntry[] = [
+  { kind: 'separator', label: 'Clientes' },
+  { kind: 'link', href: '/dashboard/admin/empresas', label: 'Empresas', icon: LuBuilding2 },
+  { kind: 'link', href: '/dashboard/admin/sucursales', label: 'Sucursales', icon: LuBuilding },
+  { kind: 'link', href: '/dashboard/admin/usuarios', label: 'Usuarios', icon: LuUsers },
+  { kind: 'separator', label: 'Chequeos' },
+  { kind: 'link', href: '/dashboard/admin/chequeos', label: 'Periódico', icon: LuClipboardCheck },
+  { kind: 'link', href: '/dashboard/admin/pre-empleo', label: 'Pre Empleo', icon: LuUserCheck },
 ]
 
 interface AdminSidebarProps {
@@ -54,6 +60,17 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
       {/* Nav */}
       <nav className="flex-1 space-y-1">
         {navItems.map((item) => {
+          if (item.kind === 'separator') {
+            return (
+              <p
+                key={item.label}
+                className="px-4 pt-5 pb-1 text-[11px] font-semibold text-tertiary uppercase tracking-widest"
+              >
+                {item.label}
+              </p>
+            )
+          }
+
           const isActive = pathname.startsWith(item.href)
           return (
             <Link
