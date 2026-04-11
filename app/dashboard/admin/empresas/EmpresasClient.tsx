@@ -125,6 +125,7 @@ export default function EmpresasClient({ empresas }: { empresas: Empresa[] }) {
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar empresa..."
               className="w-full pl-9 pr-8 py-2 rounded-lg border border-outline-variant bg-surface-container-low text-sm text-on-surface placeholder:text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+              suppressHydrationWarning
             />
             {search && (
               <button
