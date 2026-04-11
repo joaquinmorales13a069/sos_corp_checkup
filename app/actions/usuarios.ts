@@ -1,8 +1,15 @@
 'use server'
 
+import crypto from 'crypto'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { sendCredenciales } from '@/lib/resend'
+
+function generatePassword(): string {
+  // URL-safe base64, ~11 chars — e.g. "aB3xKm9Rp2w"
+  return crypto.randomBytes(8).toString('base64url')
+}
 
 export async function createUsuario(formData: FormData) {
   const nombre = (formData.get('nombre') as string).trim()
@@ -23,12 +30,19 @@ export async function createUsuario(formData: FormData) {
 
   if (error) return { error: error.message }
 
-  // Assign empresas if any were selected
+  // Assign empresas if selected
   const empresaIds = formData.getAll('empresa_ids') as string[]
   if (empresaIds.length > 0 && data.user) {
     const rows = empresaIds.map((empresa_id) => ({ usuario_id: data.user!.id, empresa_id }))
     const supabase = await createClient()
     await supabase.from('responsable_empresa').insert(rows)
+  }
+
+  // Send credentials email (non-blocking — user is created regardless)
+  const emailResult = await sendCredenciales({ nombre, email, password })
+  if (emailResult?.error) {
+    // User was created successfully but email failed
+    return { warning: `Usuario creado, pero el email no se pudo enviar: ${emailResult.error}` }
   }
 
   revalidatePath('/dashboard/admin/usuarios')
@@ -70,4 +84,19 @@ export async function updateAsignaciones(usuarioId: string, empresaIds: string[]
   }
 
   revalidatePath('/dashboard/admin/usuarios')
+}
+
+export async function reenviarCredenciales(usuarioId: string, email: string, nombre: string) {
+  const newPassword = generatePassword()
+
+  // Reset password in Supabase Auth
+  const adminSupabase = createAdminClient()
+  const { error: updateError } = await adminSupabase.auth.admin.updateUserById(usuarioId, {
+    password: newPassword,
+  })
+  if (updateError) return { error: updateError.message }
+
+  // Send new credentials email
+  const emailResult = await sendCredenciales({ nombre, email, password: newPassword })
+  if (emailResult?.error) return { error: `Contraseña actualizada pero el email falló: ${emailResult.error}` }
 }
