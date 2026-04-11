@@ -1,14 +1,17 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'react-toastify'
 import { createClient } from '@/lib/supabase/client'
+import Turnstile, { useTurnstile } from 'react-turnstile'
 
 export default function LoginForm() {
   const [error, setError] = useState('')
   const [isPending, setIsPending] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const searchParams = useSearchParams()
+  const turnstile = useTurnstile()
 
   useEffect(() => {
     if (searchParams.get('logout') === '1') {
@@ -20,6 +23,12 @@ export default function LoginForm() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError('')
+
+    if (!captchaToken) {
+      setError('Por favor espera a que se complete la verificación de seguridad.')
+      return
+    }
+
     setIsPending(true)
 
     const form = new FormData(e.currentTarget)
@@ -27,11 +36,30 @@ export default function LoginForm() {
     const password = form.get('password') as string
 
     const supabase = createClient()
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+      options: { captchaToken },
+    })
 
     if (authError) {
-      setError('Credenciales incorrectas. Verifica tu email y contraseña.')
-      toast.error('Credenciales incorrectas')
+      console.error('[Auth error]', authError.status, authError.message)
+
+      const msg = authError.message.toLowerCase()
+      let userMessage = 'Credenciales incorrectas. Verifica tu email y contraseña.'
+
+      if (msg.includes('captcha')) {
+        userMessage = 'Error en la verificación de seguridad. Recarga la página e inténtalo de nuevo.'
+      } else if (msg.includes('email not confirmed')) {
+        userMessage = 'Debes confirmar tu correo electrónico antes de iniciar sesión.'
+      } else if (msg.includes('too many requests')) {
+        userMessage = 'Demasiados intentos. Espera unos minutos antes de intentarlo de nuevo.'
+      }
+
+      setError(userMessage)
+      toast.error(userMessage)
+      setCaptchaToken(null)
+      turnstile.reset()
       setIsPending(false)
       return
     }
@@ -60,6 +88,7 @@ export default function LoginForm() {
           autoComplete="email"
           placeholder="correo@empresa.com"
           className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sos-bluegreen/30 focus:border-sos-bluegreen transition"
+          suppressHydrationWarning
         />
       </div>
 
@@ -75,12 +104,24 @@ export default function LoginForm() {
           autoComplete="current-password"
           placeholder="••••••••"
           className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sos-bluegreen/30 focus:border-sos-bluegreen transition"
+          suppressHydrationWarning
         />
       </div>
 
+      <Turnstile
+        sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+        onVerify={(token) => setCaptchaToken(token)}
+        onExpire={() => setCaptchaToken(null)}
+        onError={() => {
+          setCaptchaToken(null)
+          setError('Error al cargar la verificación de seguridad. Recarga la página.')
+        }}
+        className="flex justify-center"
+      />
+
       <button
         type="submit"
-        disabled={isPending}
+        disabled={isPending || !captchaToken}
         className="w-full bg-sos-red text-sos-white py-2.5 rounded-lg text-sm font-semibold hover:bg-sos-red/90 transition disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {isPending ? 'Ingresando...' : 'Ingresar'}
