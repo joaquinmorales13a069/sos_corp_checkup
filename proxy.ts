@@ -31,16 +31,9 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { pathname } = request.nextUrl
-
-  // Rutas protegidas: redirige al login si no hay sesión
-  if (!user && pathname.startsWith('/dashboard')) {
+  // Solo protege rutas del dashboard — el redirect desde /login lo maneja la página
+  if (!user && request.nextUrl.pathname.startsWith('/dashboard')) {
     return NextResponse.redirect(new URL('/login', request.url))
-  }
-
-  // Si ya tiene sesión y va al login, redirige al dashboard
-  if (user && pathname === '/login') {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
   return supabaseResponse

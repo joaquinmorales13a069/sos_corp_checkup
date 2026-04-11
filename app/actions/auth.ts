@@ -1,11 +1,11 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getProfile } from '@/lib/auth'
 
 export type LoginState = {
   error?: string
+  redirectTo?: string
 } | null
 
 export async function login(_state: LoginState, formData: FormData): Promise<LoginState> {
@@ -24,12 +24,11 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
   }
 
   const profile = await getProfile()
+  const redirectTo = profile?.rol === 'admin'
+    ? '/dashboard/admin/empresas'
+    : '/dashboard/responsable'
 
-  if (profile?.rol === 'admin') {
-    redirect('/dashboard/admin/empresas')
-  } else {
-    redirect('/dashboard/responsable')
-  }
+  return { redirectTo }
 }
 
 export async function logout() {

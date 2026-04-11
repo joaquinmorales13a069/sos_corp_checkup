@@ -1,16 +1,39 @@
 'use client'
 
-import { useActionState } from 'react'
-import { login } from '@/app/actions/auth'
+import { useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 export default function LoginForm() {
-  const [state, formAction, isPending] = useActionState(login, null)
+  const [error, setError] = useState('')
+  const [isPending, setIsPending] = useState(false)
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setError('')
+    setIsPending(true)
+
+    const form = new FormData(e.currentTarget)
+    const email = form.get('email') as string
+    const password = form.get('password') as string
+
+    const supabase = createClient()
+    const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+
+    if (authError) {
+      setError('Credenciales incorrectas. Verifica tu email y contraseña.')
+      setIsPending(false)
+      return
+    }
+
+    // Full page navigation — evita conflictos con replaceState en Safari
+    window.location.href = '/dashboard'
+  }
 
   return (
-    <form action={formAction} className="space-y-5">
-      {state?.error && (
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {error && (
         <div className="bg-red-50 border border-sos-red/30 text-sos-red text-sm px-4 py-3 rounded-lg">
-          {state.error}
+          {error}
         </div>
       )}
 
