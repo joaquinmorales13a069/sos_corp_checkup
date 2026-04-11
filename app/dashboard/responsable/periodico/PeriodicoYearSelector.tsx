@@ -1,27 +1,44 @@
 'use client'
 
 import Link from 'next/link'
-import { LuCalendar, LuChevronRight } from 'react-icons/lu'
+import { LuCalendar, LuChevronRight, LuArrowLeft } from 'react-icons/lu'
 
-export default function ResponsableYearSelector({ años }: { años: number[] }) {
+export default function PeriodicoYearSelector({ años }: { años: number[] }) {
   if (años.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center mb-4">
-          <LuCalendar size={32} className="text-tertiary" />
+      <div className="space-y-6">
+        <Link
+          href="/dashboard/responsable"
+          className="inline-flex items-center gap-2 text-sm text-tertiary hover:text-primary font-medium transition-colors"
+        >
+          <LuArrowLeft size={16} />
+          Volver a categorías
+        </Link>
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center mb-4">
+            <LuCalendar size={32} className="text-tertiary" />
+          </div>
+          <h3 className="text-lg font-bold text-on-surface font-headline mb-2">
+            Sin chequeos disponibles
+          </h3>
+          <p className="text-sm text-tertiary max-w-sm">
+            Aún no hay chequeos médicos periódicos asignados. Contacta al administrador de SOS Medical para más información.
+          </p>
         </div>
-        <h3 className="text-lg font-bold text-on-surface font-headline mb-2">
-          Sin chequeos disponibles
-        </h3>
-        <p className="text-sm text-tertiary max-w-sm">
-          Aún no hay chequeos médicos asignados. Contacta al administrador de SOS Medical para más información.
-        </p>
       </div>
     )
   }
 
   return (
     <div className="space-y-6">
+      <Link
+        href="/dashboard/responsable"
+        className="inline-flex items-center gap-2 text-sm text-tertiary hover:text-primary font-medium transition-colors"
+      >
+        <LuArrowLeft size={16} />
+        Volver a categorías
+      </Link>
+
       <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 px-5 py-4 flex items-center gap-4">
         <LuCalendar size={32} className="text-primary" />
         <div>
@@ -34,7 +51,7 @@ export default function ResponsableYearSelector({ años }: { años: number[] }) 
         {años.map((año) => (
           <Link
             key={año}
-            href={`/dashboard/responsable/${año}`}
+            href={`/dashboard/responsable/periodico/${año}`}
             className="group bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-6 flex items-center justify-between hover:shadow-md hover:border-primary/30 transition-all active:scale-[0.98]"
           >
             <div className="flex items-center gap-4">
@@ -43,7 +60,7 @@ export default function ResponsableYearSelector({ años }: { años: number[] }) 
               </div>
               <div>
                 <p className="text-2xl font-bold text-on-surface font-headline">{año}</p>
-                <p className="text-xs text-tertiary font-medium">Chequeos médicos</p>
+                <p className="text-xs text-tertiary font-medium">Chequeos periódicos</p>
               </div>
             </div>
             <LuChevronRight size={20} className="text-tertiary group-hover:text-primary transition-colors" />

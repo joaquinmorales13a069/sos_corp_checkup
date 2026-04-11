@@ -50,7 +50,9 @@ export default function ResponsableSidebar({ open, onClose }: ResponsableSidebar
       <nav className="flex-1 space-y-1">
         {navItems.map((item) => {
           const isActive = item.exact
-            ? pathname === item.href || /^\/dashboard\/responsable\/\d+/.test(pathname)
+            ? pathname === item.href ||
+              pathname.startsWith('/dashboard/responsable/periodico') ||
+              pathname.startsWith('/dashboard/responsable/pre-empleo')
             : pathname.startsWith(item.href)
           return (
             <Link

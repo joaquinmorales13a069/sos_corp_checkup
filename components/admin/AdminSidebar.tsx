@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { logout } from '@/app/actions/auth'
 import logo from '@/assets/images/logo-SOSMedical.webp'
-import { LuBuilding2, LuBuilding, LuUsers, LuClipboardCheck, LuLogOut, LuX } from 'react-icons/lu'
+import { LuBuilding2, LuBuilding, LuUsers, LuClipboardCheck, LuUserCheck, LuLogOut, LuX } from 'react-icons/lu'
 import type { IconType } from 'react-icons'
 
 const navItems: { href: string; label: string; icon: IconType }[] = [
@@ -13,6 +13,7 @@ const navItems: { href: string; label: string; icon: IconType }[] = [
   { href: '/dashboard/admin/sucursales', label: 'Sucursales', icon: LuBuilding },
   { href: '/dashboard/admin/usuarios', label: 'Usuarios', icon: LuUsers },
   { href: '/dashboard/admin/chequeos', label: 'Chequeos', icon: LuClipboardCheck },
+  { href: '/dashboard/admin/pre-empleo', label: 'Pre Empleo', icon: LuUserCheck },
 ]
 
 interface AdminSidebarProps {
