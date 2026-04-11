@@ -28,7 +28,7 @@ export function credencialesHtml({
         <!-- Header: white background for logo -->
         <tr>
           <td style="background:#ffffff;padding:24px 40px;">
-            <img src="${loginUrl}/logo-SOSMedical.webp" alt="SOS Medical" height="44" style="display:block;height:44px;width:auto;" />
+            <img src="https://empresas.sosmedical.com.ni/logo-SOSMedical.webp" alt="SOS Medical" height="44" style="display:block;height:44px;width:auto;" />
           </td>
         </tr>
 
@@ -66,8 +66,8 @@ export function credencialesHtml({
             <table cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
               <tr>
                 <td style="background:#CC3333;border-radius:10px;">
-                  <a href="${loginUrl}/login" style="display:inline-block;padding:14px 32px;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;">
-                    Ingresar al sistema →
+                  <a href="https://empresas.sosmedical.com.ni/login" style="display:inline-block;padding:14px 32px;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;">
+                    Ingresar al sistema
                   </a>
                 </td>
               </tr>
