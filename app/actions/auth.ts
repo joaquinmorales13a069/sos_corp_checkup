@@ -1,0 +1,38 @@
+'use server'
+
+import { createClient } from '@/lib/supabase/server'
+import { getProfile } from '@/lib/auth'
+
+export type LoginState = {
+  error?: string
+  redirectTo?: string
+} | null
+
+export async function login(_state: LoginState, formData: FormData): Promise<LoginState> {
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+
+  if (!email || !password) {
+    return { error: 'Completa todos los campos.' }
+  }
+
+  const supabase = await createClient()
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
+
+  if (error) {
+    return { error: 'Credenciales incorrectas. Verifica tu email y contraseña.' }
+  }
+
+  const profile = await getProfile()
+  const redirectTo = profile?.rol === 'admin'
+    ? '/dashboard/admin/empresas'
+    : '/dashboard/responsable'
+
+  return { redirectTo }
+}
+
+export async function logout() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  redirect('/login')
+}

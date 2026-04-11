@@ -15,6 +15,8 @@
   --color-sos-gray: #666666;
   --color-sos-white: #FFFFFF;
   --color-sos-bluegreen: #0066CC;
+
+  --font-sans: var(--font-poppins);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,5 +29,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins), sans-serif;
 }
