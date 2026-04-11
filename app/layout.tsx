@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Poppins, Manrope } from 'next/font/google'
+import ToastProvider from '@/components/ToastProvider'
 import './globals.css'
 
 const poppins = Poppins({
@@ -15,10 +16,10 @@ const manrope = Manrope({
 })
 
 export const metadata: Metadata = {
-  title: 'SOS CheckUp',
+  title: 'SOS Medical Online',
   description: 'Sistema de gestión de chequeos médicos empresariales',
   icons: {
-    icon: '/GOTA.png',
+    icon: '/icon-SOSMedical.png',
   },
 }
 
@@ -30,7 +31,10 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${poppins.variable} ${manrope.variable} h-full`}>
       <head />
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        {children}
+        <ToastProvider />
+      </body>
     </html>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition, useMemo } from 'react'
+import { toast } from 'react-toastify'
 import { createUsuario, updateUsuario, deleteUsuario, updateAsignaciones, reenviarCredenciales } from '@/app/actions/usuarios'
 import DeleteModal from '@/components/admin/DeleteModal'
 import type { Tables } from '@/lib/database.types'
@@ -147,9 +148,12 @@ function CreateUsuarioModal({
       const result = await createUsuario(fd)
       if (result?.error) {
         setError(result.error)
+        toast.error(result.error)
       } else if (result?.warning) {
         setWarning(result.warning)
+        toast.warning(result.warning)
       } else {
+        toast.success('Responsable creado exitosamente')
         onClose()
       }
     })
@@ -224,8 +228,9 @@ function EditUsuarioModal({
         updateUsuario(usuario.id, fd),
         updateAsignaciones(usuario.id, selected),
       ])
-      if (r1?.error) { setError(r1.error); return }
-      if (r2?.error) { setError(r2.error); return }
+      if (r1?.error) { setError(r1.error); toast.error(r1.error); return }
+      if (r2?.error) { setError(r2.error); toast.error(r2.error); return }
+      toast.success('Responsable actualizado exitosamente')
       onClose()
     })
   }
@@ -279,6 +284,17 @@ export default function UsuariosClient({
   const [sendingId, setSendingId] = useState<string | null>(null)
   const [sentId, setSentId] = useState<string | null>(null)
   const [sendError, setSendError] = useState<string | null>(null)
+  const [search, setSearch] = useState('')
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase()
+    if (!q) return usuarios
+    return usuarios.filter(
+      (u) =>
+        u.nombre.toLowerCase().includes(q) ||
+        u.email.toLowerCase().includes(q)
+    )
+  }, [search, usuarios])
 
   async function handleReenviar(usuario: UsuarioRow) {
     setSendingId(usuario.id)
@@ -288,8 +304,10 @@ export default function UsuariosClient({
     setSendingId(null)
     if (result?.error) {
       setSendError(result.error)
+      toast.error(result.error)
     } else {
       setSentId(usuario.id)
+      toast.success('Credenciales reenviadas exitosamente')
       setTimeout(() => setSentId(null), 3000)
     }
   }
@@ -327,8 +345,27 @@ export default function UsuariosClient({
 
       {/* Table */}
       <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 overflow-hidden">
-        <div className="px-5 py-4 border-b border-outline-variant/10">
+        <div className="px-5 py-4 border-b border-outline-variant/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <h3 className="text-sm font-semibold text-on-surface font-headline">Listado de responsables</h3>
+          <div className="relative w-full sm:w-64">
+            <LuSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-tertiary pointer-events-none" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Buscar por nombre o correo..."
+              className="w-full pl-9 pr-8 py-2 rounded-lg border border-outline-variant bg-surface-container-low text-sm text-on-surface placeholder:text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-tertiary hover:text-on-surface transition-colors"
+              >
+                <LuX size={16} />
+              </button>
+            )}
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -341,14 +378,14 @@ export default function UsuariosClient({
               </tr>
             </thead>
             <tbody>
-              {usuarios.length === 0 ? (
+              {filtered.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-5 py-12 text-center text-sm text-tertiary">
-                    No hay responsables registrados
+                    {search ? 'Sin resultados para la búsqueda' : 'No hay responsables registrados'}
                   </td>
                 </tr>
               ) : (
-                usuarios.map((usuario) => {
+                filtered.map((usuario) => {
                   const count = asignaciones[usuario.id]?.length ?? 0
                   return (
                     <tr key={usuario.id} className="border-t border-outline-variant/10 hover:bg-surface-container-low transition-colors">

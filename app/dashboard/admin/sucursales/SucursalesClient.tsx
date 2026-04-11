@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useMemo } from 'react'
+import { toast } from 'react-toastify'
 import { createSucursal, updateSucursal, deleteSucursal } from '@/app/actions/sucursales'
 import DeleteModal from '@/components/admin/DeleteModal'
 import type { Tables } from '@/lib/database.types'
-import { LuBuilding, LuPlus, LuPencil, LuTrash2 } from 'react-icons/lu'
+import { LuBuilding, LuPlus, LuPencil, LuTrash2, LuSearch, LuX } from 'react-icons/lu'
 
 type Sucursal = Tables<'sucursales'>
 type Empresa = Tables<'empresas'>
@@ -37,8 +38,13 @@ function SucursalModal({
     const fd = new FormData(e.currentTarget)
     startTransition(async () => {
       const result = await onSave(fd)
-      if (result?.error) setError(result.error)
-      else onClose()
+      if (result?.error) {
+        setError(result.error)
+        toast.error(result.error)
+      } else {
+        toast.success(title.startsWith('Nueva') ? 'Sucursal creada exitosamente' : 'Sucursal actualizada exitosamente')
+        onClose()
+      }
     })
   }
 
@@ -110,6 +116,17 @@ export default function SucursalesClient({
   const [showCreate, setShowCreate] = useState(false)
   const [editTarget, setEditTarget] = useState<SucursalWithEmpresa | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<SucursalWithEmpresa | null>(null)
+  const [search, setSearch] = useState('')
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase()
+    if (!q) return sucursales
+    return sucursales.filter(
+      (s) =>
+        s.nombre.toLowerCase().includes(q) ||
+        (s.empresas?.nombre ?? '').toLowerCase().includes(q)
+    )
+  }, [search, sucursales])
 
   return (
     <div className="space-y-6">
@@ -133,8 +150,27 @@ export default function SucursalesClient({
 
       {/* Table */}
       <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 overflow-hidden">
-        <div className="px-5 py-4 border-b border-outline-variant/10">
+        <div className="px-5 py-4 border-b border-outline-variant/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <h3 className="text-sm font-semibold text-on-surface font-headline">Listado de sucursales</h3>
+          <div className="relative w-full sm:w-64">
+            <LuSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-tertiary pointer-events-none" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Buscar sucursal o empresa..."
+              className="w-full pl-9 pr-8 py-2 rounded-lg border border-outline-variant bg-surface-container-low text-sm text-on-surface placeholder:text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-tertiary hover:text-on-surface transition-colors"
+              >
+                <LuX size={16} />
+              </button>
+            )}
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -155,14 +191,14 @@ export default function SucursalesClient({
               </tr>
             </thead>
             <tbody>
-              {sucursales.length === 0 ? (
+              {filtered.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-5 py-12 text-center text-sm text-tertiary">
-                    No hay sucursales registradas
+                    {search ? 'Sin resultados para la búsqueda' : 'No hay sucursales registradas'}
                   </td>
                 </tr>
               ) : (
-                sucursales.map((sucursal) => (
+                filtered.map((sucursal) => (
                   <tr
                     key={sucursal.id}
                     className="border-t border-outline-variant/10 hover:bg-surface-container-low transition-colors"
