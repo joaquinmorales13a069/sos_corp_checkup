@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition, useMemo } from 'react'
+import { toast } from 'react-toastify'
 import { createChequeo, updateChequeo, deleteChequeo } from '@/app/actions/chequeos'
 import DeleteModal from '@/components/admin/DeleteModal'
 import type { Tables } from '@/lib/database.types'
@@ -67,8 +68,13 @@ function ChequeoModal({
     const fd = new FormData(e.currentTarget)
     startTransition(async () => {
       const result = await onSave(fd)
-      if (result?.error) setError(result.error)
-      else onClose()
+      if (result?.error) {
+        setError(result.error)
+        toast.error(result.error)
+      } else {
+        toast.success(title.startsWith('Nuevo') ? 'Chequeo creado exitosamente' : 'Chequeo actualizado exitosamente')
+        onClose()
+      }
     })
   }
 

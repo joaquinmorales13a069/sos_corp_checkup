@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import Image from 'next/image'
 import { getUser } from '@/lib/auth'
@@ -26,7 +27,9 @@ export default async function LoginPage() {
         {/* Card */}
         <div className="bg-sos-white rounded-2xl shadow-sm border border-gray-100 p-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-6">Iniciar sesión</h2>
-          <LoginForm />
+          <Suspense>
+            <LoginForm />
+          </Suspense>
         </div>
 
         <p className="text-center text-xs text-sos-gray mt-6">

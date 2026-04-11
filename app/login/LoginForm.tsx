@@ -1,11 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { toast } from 'react-toastify'
 import { createClient } from '@/lib/supabase/client'
 
 export default function LoginForm() {
   const [error, setError] = useState('')
   const [isPending, setIsPending] = useState(false)
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    if (searchParams.get('logout') === '1') {
+      toast.info('Sesión cerrada correctamente')
+      window.history.replaceState({}, '', '/login')
+    }
+  }, [searchParams])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -21,11 +31,12 @@ export default function LoginForm() {
 
     if (authError) {
       setError('Credenciales incorrectas. Verifica tu email y contraseña.')
+      toast.error('Credenciales incorrectas')
       setIsPending(false)
       return
     }
 
-    // Full page navigation — evita conflictos con replaceState en Safari
+    toast.success('Sesión iniciada correctamente')
     window.location.href = '/dashboard'
   }
 

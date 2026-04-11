@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import { toast } from 'react-toastify'
 import { updateProfile, updateEmail, updatePassword } from '@/app/actions/settings'
 import { LuUser, LuMail, LuLock, LuCheck } from 'react-icons/lu'
 
@@ -68,8 +69,8 @@ export default function AjustesClient({
     const fd = new FormData(e.currentTarget)
     startProfileTransition(async () => {
       const result = await updateProfile(fd)
-      if (result?.error) setProfileError(result.error)
-      else setProfileSuccess(true)
+      if (result?.error) { setProfileError(result.error); toast.error(result.error) }
+      else { setProfileSuccess(true); toast.success('Nombre actualizado correctamente') }
     })
   }
 
@@ -80,8 +81,8 @@ export default function AjustesClient({
     const fd = new FormData(e.currentTarget)
     startEmailTransition(async () => {
       const result = await updateEmail(fd)
-      if (result?.error) setEmailError(result.error)
-      else setEmailSuccess(true)
+      if (result?.error) { setEmailError(result.error); toast.error(result.error) }
+      else { setEmailSuccess(true); toast.success('Correo actualizado correctamente') }
     })
   }
 
@@ -92,9 +93,10 @@ export default function AjustesClient({
     const fd = new FormData(e.currentTarget)
     startPasswordTransition(async () => {
       const result = await updatePassword(fd)
-      if (result?.error) setPasswordError(result.error)
+      if (result?.error) { setPasswordError(result.error); toast.error(result.error) }
       else {
         setPasswordSuccess(true)
+        toast.success('Contraseña actualizada correctamente')
         e.currentTarget?.reset?.()
       }
     })

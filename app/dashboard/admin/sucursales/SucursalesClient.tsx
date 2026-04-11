@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition, useMemo } from 'react'
+import { toast } from 'react-toastify'
 import { createSucursal, updateSucursal, deleteSucursal } from '@/app/actions/sucursales'
 import DeleteModal from '@/components/admin/DeleteModal'
 import type { Tables } from '@/lib/database.types'
@@ -37,8 +38,13 @@ function SucursalModal({
     const fd = new FormData(e.currentTarget)
     startTransition(async () => {
       const result = await onSave(fd)
-      if (result?.error) setError(result.error)
-      else onClose()
+      if (result?.error) {
+        setError(result.error)
+        toast.error(result.error)
+      } else {
+        toast.success(title.startsWith('Nueva') ? 'Sucursal creada exitosamente' : 'Sucursal actualizada exitosamente')
+        onClose()
+      }
     })
   }
 

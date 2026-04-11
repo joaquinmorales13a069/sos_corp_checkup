@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition, useMemo } from 'react'
+import { toast } from 'react-toastify'
 import { createEmpresa, updateEmpresa, deleteEmpresa } from '@/app/actions/empresas'
 import DeleteModal from '@/components/admin/DeleteModal'
 import type { Tables } from '@/lib/database.types'
@@ -30,8 +31,13 @@ function EmpresaModal({
     const fd = new FormData(e.currentTarget)
     startTransition(async () => {
       const result = await onSave(fd)
-      if (result?.error) setError(result.error)
-      else onClose()
+      if (result?.error) {
+        setError(result.error)
+        toast.error(result.error)
+      } else {
+        toast.success(title.startsWith('Nueva') ? 'Empresa creada exitosamente' : 'Empresa actualizada exitosamente')
+        onClose()
+      }
     })
   }
 

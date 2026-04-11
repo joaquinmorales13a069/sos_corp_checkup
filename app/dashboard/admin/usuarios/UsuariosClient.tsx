@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition, useMemo } from 'react'
+import { toast } from 'react-toastify'
 import { createUsuario, updateUsuario, deleteUsuario, updateAsignaciones, reenviarCredenciales } from '@/app/actions/usuarios'
 import DeleteModal from '@/components/admin/DeleteModal'
 import type { Tables } from '@/lib/database.types'
@@ -147,9 +148,12 @@ function CreateUsuarioModal({
       const result = await createUsuario(fd)
       if (result?.error) {
         setError(result.error)
+        toast.error(result.error)
       } else if (result?.warning) {
         setWarning(result.warning)
+        toast.warning(result.warning)
       } else {
+        toast.success('Responsable creado exitosamente')
         onClose()
       }
     })
@@ -224,8 +228,9 @@ function EditUsuarioModal({
         updateUsuario(usuario.id, fd),
         updateAsignaciones(usuario.id, selected),
       ])
-      if (r1?.error) { setError(r1.error); return }
-      if (r2?.error) { setError(r2.error); return }
+      if (r1?.error) { setError(r1.error); toast.error(r1.error); return }
+      if (r2?.error) { setError(r2.error); toast.error(r2.error); return }
+      toast.success('Responsable actualizado exitosamente')
       onClose()
     })
   }
@@ -299,8 +304,10 @@ export default function UsuariosClient({
     setSendingId(null)
     if (result?.error) {
       setSendError(result.error)
+      toast.error(result.error)
     } else {
       setSentId(usuario.id)
+      toast.success('Credenciales reenviadas exitosamente')
       setTimeout(() => setSentId(null), 3000)
     }
   }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import { toast } from 'react-toastify'
 import { LuTriangleAlert } from 'react-icons/lu'
 
 interface DeleteModalProps {
@@ -17,8 +18,13 @@ export default function DeleteModal({ name, warning, onClose, onConfirm }: Delet
   function handleConfirm() {
     startTransition(async () => {
       const result = await onConfirm()
-      if (result?.error) setError(result.error)
-      else onClose()
+      if (result?.error) {
+        setError(result.error)
+        toast.error(result.error)
+      } else {
+        toast.success('Registro eliminado exitosamente')
+        onClose()
+      }
     })
   }
 
