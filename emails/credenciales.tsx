@@ -73,10 +73,22 @@ export function credencialesHtml({
               </tr>
             </table>
 
-            <p style="margin:0;color:#727784;font-size:13px;line-height:1.7;border-top:1px solid #e0e3e5;padding-top:24px;">
+            <p style="margin:0 0 20px;color:#727784;font-size:13px;line-height:1.7;border-top:1px solid #e0e3e5;padding-top:24px;">
               Por seguridad, te recomendamos cambiar tu contraseña después de tu primer ingreso.<br>
               Si tienes algún problema para acceder, contacta al administrador de SOS Medical.
             </p>
+
+            <!-- Disclaimer -->
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="background:#fff8f0;border-left:3px solid #e67e22;border-radius:0 8px 8px 0;padding:14px 18px;">
+                  <p style="margin:0 0 4px;color:#b45309;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;">⚠ Aviso de responsabilidad</p>
+                  <p style="margin:0;color:#6b4c1a;font-size:12px;line-height:1.7;">
+                    El acceso a los resultados e informes médicos es de uso exclusivo y confidencial para el destinatario autorizado. <strong>SOS Medical no se hace responsable del uso, divulgación, reproducción o distribución no autorizada</strong> de los documentos una vez que el acceso ha sido otorgado. El usuario asume plena responsabilidad sobre el manejo de la información a la que acceda mediante estas credenciales.
+                  </p>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
 
