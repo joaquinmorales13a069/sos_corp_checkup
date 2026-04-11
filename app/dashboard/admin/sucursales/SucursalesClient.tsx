@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react'
 import { createSucursal, updateSucursal, deleteSucursal } from '@/app/actions/sucursales'
 import DeleteModal from '@/components/admin/DeleteModal'
 import type { Tables } from '@/lib/database.types'
+import { LuBuilding, LuPlus, LuPencil, LuTrash2 } from 'react-icons/lu'
 
 type Sucursal = Tables<'sucursales'>
 type Empresa = Tables<'empresas'>
@@ -115,7 +116,7 @@ export default function SucursalesClient({
       {/* Stats + action row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 px-5 py-4 flex items-center gap-4">
-          <span className="material-symbols-outlined text-primary text-[32px]">domain</span>
+          <LuBuilding size={32} className="text-primary" />
           <div>
             <p className="text-xs text-tertiary font-medium uppercase tracking-wide">Total sucursales</p>
             <p className="text-3xl font-bold text-primary font-headline">{sucursales.length}</p>
@@ -125,7 +126,7 @@ export default function SucursalesClient({
           onClick={() => setShowCreate(true)}
           className="flex items-center gap-2 bg-primary text-on-primary px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-primary-container transition-colors self-start sm:self-auto"
         >
-          <span className="material-symbols-outlined text-[18px]">add</span>
+          <LuPlus size={18} />
           Nueva Sucursal
         </button>
       </div>
@@ -184,14 +185,14 @@ export default function SucursalesClient({
                           title="Editar"
                           className="p-1.5 rounded-lg text-tertiary hover:text-primary hover:bg-surface-container transition-colors"
                         >
-                          <span className="material-symbols-outlined text-[18px]">edit</span>
+                          <LuPencil size={18} />
                         </button>
                         <button
                           onClick={() => setDeleteTarget(sucursal)}
                           title="Eliminar"
                           className="p-1.5 rounded-lg text-tertiary hover:text-error hover:bg-error-container/30 transition-colors"
                         >
-                          <span className="material-symbols-outlined text-[18px]">delete</span>
+                          <LuTrash2 size={18} />
                         </button>
                       </div>
                     </td>

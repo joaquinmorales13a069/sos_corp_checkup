@@ -1,6 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
+import { LuMenu } from 'react-icons/lu'
 
 const titles: Record<string, string> = {
   '/dashboard/admin/empresas': 'Empresas',
@@ -27,7 +28,7 @@ export default function AdminHeader({ nombre, onMenuClick }: AdminHeaderProps) {
           onClick={onMenuClick}
           className="lg:hidden text-tertiary hover:bg-surface-container rounded-lg p-2 transition-colors"
         >
-          <span className="material-symbols-outlined text-[22px]">menu</span>
+          <LuMenu size={22} />
         </button>
         <h2 className="text-lg sm:text-xl font-bold text-primary font-headline">
           {title}

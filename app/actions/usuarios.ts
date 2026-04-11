@@ -13,8 +13,8 @@ export async function createUsuario(formData: FormData) {
   if (!email) return { error: 'El email es requerido' }
   if (!password || password.length < 6) return { error: 'La contraseña debe tener al menos 6 caracteres' }
 
-  const supabase = createAdminClient()
-  const { error } = await supabase.auth.admin.createUser({
+  const adminSupabase = createAdminClient()
+  const { data, error } = await adminSupabase.auth.admin.createUser({
     email,
     password,
     user_metadata: { nombre, rol: 'responsable' },
@@ -22,6 +22,15 @@ export async function createUsuario(formData: FormData) {
   })
 
   if (error) return { error: error.message }
+
+  // Assign empresas if any were selected
+  const empresaIds = formData.getAll('empresa_ids') as string[]
+  if (empresaIds.length > 0 && data.user) {
+    const rows = empresaIds.map((empresa_id) => ({ usuario_id: data.user!.id, empresa_id }))
+    const supabase = await createClient()
+    await supabase.from('responsable_empresa').insert(rows)
+  }
+
   revalidatePath('/dashboard/admin/usuarios')
 }
 
@@ -40,6 +49,25 @@ export async function deleteUsuario(id: string) {
   const supabase = createAdminClient()
   const { error } = await supabase.auth.admin.deleteUser(id)
   if (error) return { error: error.message }
+
+  revalidatePath('/dashboard/admin/usuarios')
+}
+
+export async function updateAsignaciones(usuarioId: string, empresaIds: string[]) {
+  const supabase = await createClient()
+
+  const { error: deleteError } = await supabase
+    .from('responsable_empresa')
+    .delete()
+    .eq('usuario_id', usuarioId)
+
+  if (deleteError) return { error: deleteError.message }
+
+  if (empresaIds.length > 0) {
+    const rows = empresaIds.map((empresa_id) => ({ usuario_id: usuarioId, empresa_id }))
+    const { error: insertError } = await supabase.from('responsable_empresa').insert(rows)
+    if (insertError) return { error: insertError.message }
+  }
 
   revalidatePath('/dashboard/admin/usuarios')
 }
