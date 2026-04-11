@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import { LuTriangleAlert } from 'react-icons/lu'
 
 interface DeleteModalProps {
   name: string
@@ -25,7 +26,7 @@ export default function DeleteModal({ name, warning, onClose, onConfirm }: Delet
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-on-surface/40 backdrop-blur-sm p-4">
       <div className="bg-surface-container-lowest rounded-2xl shadow-xl w-full max-w-sm p-6">
         <div className="flex items-center gap-3 mb-4">
-          <span className="material-symbols-outlined text-error text-[24px]">warning</span>
+          <LuTriangleAlert size={24} className="text-error shrink-0" />
           <h3 className="text-base font-bold text-on-surface font-headline">Eliminar registro</h3>
         </div>
         <p className="text-sm text-on-surface-variant">

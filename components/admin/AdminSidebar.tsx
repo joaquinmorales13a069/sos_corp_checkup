@@ -5,12 +5,14 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { logout } from '@/app/actions/auth'
 import logo from '@/assets/images/logo-SOSMedical.webp'
+import { LuBuilding2, LuBuilding, LuUsers, LuClipboardCheck, LuLogOut, LuX } from 'react-icons/lu'
+import type { IconType } from 'react-icons'
 
-const navItems = [
-  { href: '/dashboard/admin/empresas', label: 'Empresas', icon: 'business' },
-  { href: '/dashboard/admin/sucursales', label: 'Sucursales', icon: 'domain' },
-  { href: '/dashboard/admin/usuarios', label: 'Usuarios', icon: 'group' },
-  { href: '/dashboard/admin/chequeos', label: 'Chequeos', icon: 'fact_check' },
+const navItems: { href: string; label: string; icon: IconType }[] = [
+  { href: '/dashboard/admin/empresas', label: 'Empresas', icon: LuBuilding2 },
+  { href: '/dashboard/admin/sucursales', label: 'Sucursales', icon: LuBuilding },
+  { href: '/dashboard/admin/usuarios', label: 'Usuarios', icon: LuUsers },
+  { href: '/dashboard/admin/chequeos', label: 'Chequeos', icon: LuClipboardCheck },
 ]
 
 interface AdminSidebarProps {
@@ -44,7 +46,7 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
           onClick={onClose}
           className="lg:hidden text-tertiary hover:bg-surface-container-low rounded-lg p-1 mt-1"
         >
-          <span className="material-symbols-outlined text-[20px]">close</span>
+          <LuX size={20} />
         </button>
       </div>
 
@@ -63,7 +65,7 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
                   : 'text-tertiary border-l-4 border-transparent hover:bg-surface-container-low'
               }`}
             >
-              <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+              <item.icon size={20} />
               {item.label}
             </Link>
           )
@@ -77,7 +79,7 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
             type="submit"
             className="flex items-center gap-3 px-4 py-2 text-tertiary text-sm font-medium font-headline hover:bg-surface-container-low rounded-lg transition-colors w-full"
           >
-            <span className="material-symbols-outlined text-[20px]">logout</span>
+            <LuLogOut size={20} />
             Logout
           </button>
         </form>

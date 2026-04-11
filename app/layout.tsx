@@ -29,12 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${poppins.variable} ${manrope.variable} h-full`}>
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
-        />
-      </head>
+      <head />
       <body className="min-h-full">{children}</body>
     </html>
   )
