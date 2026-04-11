@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useTransition, useMemo } from 'react'
-import { createUsuario, updateUsuario, deleteUsuario, updateAsignaciones } from '@/app/actions/usuarios'
+import { createUsuario, updateUsuario, deleteUsuario, updateAsignaciones, reenviarCredenciales } from '@/app/actions/usuarios'
 import DeleteModal from '@/components/admin/DeleteModal'
 import type { Tables } from '@/lib/database.types'
-import { LuUsers, LuUserPlus, LuSearch, LuX, LuPencil, LuTrash2 } from 'react-icons/lu'
+import { LuUsers, LuUserPlus, LuSearch, LuX, LuPencil, LuTrash2, LuMailCheck, LuMail } from 'react-icons/lu'
 
 type Profile = Tables<'profiles'>
 type Empresa = Tables<'empresas'>
@@ -136,6 +136,7 @@ function CreateUsuarioModal({
 }) {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [warning, setWarning] = useState<string | null>(null)
   const [selected, setSelected] = useState<string[]>([])
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -144,8 +145,13 @@ function CreateUsuarioModal({
     selected.forEach((id) => fd.append('empresa_ids', id))
     startTransition(async () => {
       const result = await createUsuario(fd)
-      if (result?.error) setError(result.error)
-      else onClose()
+      if (result?.error) {
+        setError(result.error)
+      } else if (result?.warning) {
+        setWarning(result.warning)
+      } else {
+        onClose()
+      }
     })
   }
 
@@ -172,13 +178,20 @@ function CreateUsuarioModal({
           )}
 
           {error && <p className="text-xs text-error bg-error-container/40 px-3 py-2 rounded-lg">{error}</p>}
+          {warning && (
+            <div className="text-xs text-on-surface bg-surface-container border border-outline-variant/30 px-3 py-2 rounded-lg">
+              <strong>Usuario creado.</strong> {warning}
+            </div>
+          )}
           <div className="flex gap-3 justify-end pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg text-sm text-tertiary hover:bg-surface-container transition-colors">
-              Cancelar
+              {warning ? 'Cerrar' : 'Cancelar'}
             </button>
-            <button type="submit" disabled={isPending} className="px-4 py-2 rounded-lg text-sm bg-primary text-on-primary font-medium hover:bg-primary-container transition-colors disabled:opacity-60">
-              {isPending ? 'Creando...' : 'Crear usuario'}
-            </button>
+            {!warning && (
+              <button type="submit" disabled={isPending} className="px-4 py-2 rounded-lg text-sm bg-primary text-on-primary font-medium hover:bg-primary-container transition-colors disabled:opacity-60">
+                {isPending ? 'Creando...' : 'Crear usuario'}
+              </button>
+            )}
           </div>
         </form>
       </div>
@@ -263,6 +276,23 @@ export default function UsuariosClient({
   const [showCreate, setShowCreate] = useState(false)
   const [editTarget, setEditTarget] = useState<UsuarioRow | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<UsuarioRow | null>(null)
+  const [sendingId, setSendingId] = useState<string | null>(null)
+  const [sentId, setSentId] = useState<string | null>(null)
+  const [sendError, setSendError] = useState<string | null>(null)
+
+  async function handleReenviar(usuario: UsuarioRow) {
+    setSendingId(usuario.id)
+    setSentId(null)
+    setSendError(null)
+    const result = await reenviarCredenciales(usuario.id, usuario.email, usuario.nombre)
+    setSendingId(null)
+    if (result?.error) {
+      setSendError(result.error)
+    } else {
+      setSentId(usuario.id)
+      setTimeout(() => setSentId(null), 3000)
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -283,6 +313,17 @@ export default function UsuariosClient({
           Nuevo Responsable
         </button>
       </div>
+
+      {/* Send error banner */}
+      {sendError && (
+        <div className="flex items-center gap-3 bg-error-container/40 border border-error/20 text-error px-4 py-3 rounded-xl text-sm">
+          <LuMail size={16} className="shrink-0" />
+          <span>{sendError}</span>
+          <button onClick={() => setSendError(null)} className="ml-auto">
+            <LuX size={16} />
+          </button>
+        </div>
+      )}
 
       {/* Table */}
       <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 overflow-hidden">
@@ -326,6 +367,22 @@ export default function UsuariosClient({
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="flex items-center justify-end gap-1">
+                          <button
+                            onClick={() => handleReenviar(usuario)}
+                            disabled={sendingId === usuario.id}
+                            title="Reenviar credenciales"
+                            className={`p-1.5 rounded-lg transition-colors disabled:opacity-50 ${
+                              sentId === usuario.id
+                                ? 'text-green-600 bg-green-50'
+                                : 'text-tertiary hover:text-primary hover:bg-surface-container'
+                            }`}
+                          >
+                            {sentId === usuario.id ? (
+                              <LuMailCheck size={18} />
+                            ) : (
+                              <LuMail size={18} />
+                            )}
+                          </button>
                           <button
                             onClick={() => setEditTarget(usuario)}
                             title="Editar"
