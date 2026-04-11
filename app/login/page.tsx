@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation'
+import Image from 'next/image'
 import { getUser } from '@/lib/auth'
 import LoginForm from './LoginForm'
+import logo from '@/assets/images/logo-SOSMedical.webp'
 
 export default async function LoginPage() {
   const user = await getUser()
@@ -9,12 +11,15 @@ export default async function LoginPage() {
   return (
     <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        {/* Logo / Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-sos-red rounded-2xl mb-4">
-            <span className="text-sos-white font-bold text-xl">SOS</span>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">SOS CheckUp</h1>
+          <Image
+            src={logo}
+            alt="SOS Medical"
+            width={180}
+            height={64}
+            className="object-contain mx-auto mb-4"
+            priority
+          />
           <p className="text-sm text-sos-gray mt-1">Gestión de chequeos médicos empresariales</p>
         </div>
 

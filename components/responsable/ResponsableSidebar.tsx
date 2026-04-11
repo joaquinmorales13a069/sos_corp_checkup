@@ -5,22 +5,20 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { logout } from '@/app/actions/auth'
 import logo from '@/assets/images/logo-SOSMedical.webp'
-import { LuBuilding2, LuBuilding, LuUsers, LuClipboardCheck, LuLogOut, LuX } from 'react-icons/lu'
+import { LuClipboardCheck, LuSettings, LuLogOut, LuX } from 'react-icons/lu'
 import type { IconType } from 'react-icons'
 
-const navItems: { href: string; label: string; icon: IconType }[] = [
-  { href: '/dashboard/admin/empresas', label: 'Empresas', icon: LuBuilding2 },
-  { href: '/dashboard/admin/sucursales', label: 'Sucursales', icon: LuBuilding },
-  { href: '/dashboard/admin/usuarios', label: 'Usuarios', icon: LuUsers },
-  { href: '/dashboard/admin/chequeos', label: 'Chequeos', icon: LuClipboardCheck },
+const navItems: { href: string; label: string; icon: IconType; exact?: boolean }[] = [
+  { href: '/dashboard/responsable', label: 'Chequeos', icon: LuClipboardCheck, exact: true },
+  { href: '/dashboard/responsable/ajustes', label: 'Ajustes', icon: LuSettings },
 ]
 
-interface AdminSidebarProps {
+interface ResponsableSidebarProps {
   open: boolean
   onClose: () => void
 }
 
-export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
+export default function ResponsableSidebar({ open, onClose }: ResponsableSidebarProps) {
   const pathname = usePathname()
 
   return (
@@ -32,7 +30,6 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
         lg:translate-x-0
       `}
     >
-      {/* Logo */}
       <div className="mb-10 px-2 flex items-start justify-between">
         <Image
           src={logo}
@@ -50,10 +47,11 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
         </button>
       </div>
 
-      {/* Nav */}
       <nav className="flex-1 space-y-1">
         {navItems.map((item) => {
-          const isActive = pathname.startsWith(item.href)
+          const isActive = item.exact
+            ? pathname === item.href || /^\/dashboard\/responsable\/\d+/.test(pathname)
+            : pathname.startsWith(item.href)
           return (
             <Link
               key={item.href}
@@ -72,7 +70,6 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
         })}
       </nav>
 
-      {/* Logout */}
       <div className="pt-6 border-t border-surface-container">
         <form action={logout}>
           <button
