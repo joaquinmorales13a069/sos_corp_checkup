@@ -16,10 +16,10 @@ const manrope = Manrope({
 })
 
 export const metadata: Metadata = {
-  title: 'SOS CheckUp',
+  title: 'SOS Medical Online',
   description: 'Sistema de gestión de chequeos médicos empresariales',
   icons: {
-    icon: '/GOTA.png',
+    icon: '/icon-SOSMedical.png',
   },
 }
 
