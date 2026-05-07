@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { logAuditEvent } from '@/lib/audit'
 
 export async function updateProfile(formData: FormData) {
   const nombre = (formData.get('nombre') as string).trim()
@@ -19,6 +20,7 @@ export async function updateProfile(formData: FormData) {
 
   if (error) return { error: error.message }
 
+  await logAuditEvent('cambio_nombre', nombre)
   revalidatePath('/dashboard/responsable')
 }
 
@@ -35,6 +37,7 @@ export async function updateEmail(formData: FormData) {
 
   if (error) return { error: error.message }
 
+  await logAuditEvent('cambio_correo', email)
   revalidatePath('/dashboard/responsable')
 }
 
@@ -63,4 +66,6 @@ export async function updatePassword(formData: FormData) {
   })
 
   if (error) return { error: error.message }
+
+  await logAuditEvent('cambio_contraseña')
 }

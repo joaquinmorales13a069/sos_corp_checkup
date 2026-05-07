@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { requireAdmin } from '@/lib/auth'
+import { logAuditEvent } from '@/lib/audit'
 
 export async function createChequeoPreEmpleo(formData: FormData) {
   await requireAdmin()
@@ -44,6 +45,7 @@ export async function createChequeoPreEmpleo(formData: FormData) {
     return { error: error.message }
   }
 
+  await logAuditEvent('crear_chequeo_pre_empleo', `${sucursal_id}/${año}/${mes}/${dia}`)
   revalidatePath('/dashboard/admin/pre-empleo')
   revalidatePath('/dashboard/responsable')
 }
@@ -89,6 +91,7 @@ export async function updateChequeoPreEmpleo(id: string, formData: FormData) {
     return { error: error.message }
   }
 
+  await logAuditEvent('editar_chequeo_pre_empleo', `${sucursal_id}/${año}/${mes}/${dia}`)
   revalidatePath('/dashboard/admin/pre-empleo')
   revalidatePath('/dashboard/responsable')
 }
@@ -102,6 +105,7 @@ export async function deleteChequeoPreEmpleo(id: string) {
     .eq('id', id)
   if (error) return { error: error.message }
 
+  await logAuditEvent('eliminar_chequeo_pre_empleo', id)
   revalidatePath('/dashboard/admin/pre-empleo')
   revalidatePath('/dashboard/responsable')
 }

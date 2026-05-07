@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { sendCredenciales } from '@/lib/resend'
 import { requireAdmin } from '@/lib/auth'
+import { logAuditEvent } from '@/lib/audit'
 
 function generatePassword(): string {
   // URL-safe base64, ~11 chars — e.g. "aB3xKm9Rp2w"
@@ -47,6 +48,7 @@ export async function createUsuario(formData: FormData) {
     return { warning: `Usuario creado, pero el email no se pudo enviar: ${emailResult.error}` }
   }
 
+  await logAuditEvent('crear_usuario', email)
   revalidatePath('/dashboard/admin/usuarios')
 }
 
@@ -59,6 +61,7 @@ export async function updateUsuario(id: string, formData: FormData) {
   const { error } = await supabase.from('profiles').update({ nombre }).eq('id', id)
   if (error) return { error: error.message }
 
+  await logAuditEvent('editar_usuario', id)
   revalidatePath('/dashboard/admin/usuarios')
 }
 
@@ -68,6 +71,7 @@ export async function deleteUsuario(id: string) {
   const { error } = await supabase.auth.admin.deleteUser(id)
   if (error) return { error: error.message }
 
+  await logAuditEvent('eliminar_usuario', id)
   revalidatePath('/dashboard/admin/usuarios')
 }
 
