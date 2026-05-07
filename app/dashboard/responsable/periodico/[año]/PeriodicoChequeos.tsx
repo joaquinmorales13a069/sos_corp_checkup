@@ -113,7 +113,7 @@ export default function PeriodicoChequeos({
             {group.sucursales.map((suc) => (
               <a
                 key={suc.nombre + suc.drive_url}
-                href={suc.drive_url}
+                href={`/api/drive-redirect?url=${encodeURIComponent(suc.drive_url)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-5 flex items-center justify-between hover:shadow-md hover:border-primary/30 transition-all active:scale-[0.98]"

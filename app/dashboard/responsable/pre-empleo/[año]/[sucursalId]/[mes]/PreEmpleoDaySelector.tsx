@@ -77,7 +77,7 @@ export default function PreEmpleoDaySelector({
         {dias.map((entry) => (
           <a
             key={entry.dia}
-            href={entry.drive_url}
+            href={`/api/drive-redirect?url=${encodeURIComponent(entry.drive_url)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="group bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-4 flex flex-col items-center gap-2 hover:shadow-md hover:border-primary/30 transition-all active:scale-[0.98]"
