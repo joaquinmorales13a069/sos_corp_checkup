@@ -359,7 +359,7 @@ Documento Word con programa de capacitación:
 | 8 | Técnico + Documento | 16 | ⬜ Pendiente |
 | 9 | Documento Word | 17 | ⬜ Pendiente |
 | 10 | Documento Word | 18 | ⬜ Pendiente |
-| 11 | Código (Next.js) | — | ⬜ Pendiente |
+| 11 | Código (Next.js) | — | ✅ Completo |
 
 **Documentos Word a generar:** ~10 documentos
 **Implementaciones técnicas en código:** 4–5 cambios (MFA, headers OWASP, logging, sesiones, páginas)
