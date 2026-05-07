@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_log: {
+        Row: {
+          accion: string
+          created_at: string | null
+          id: string
+          ip_address: string | null
+          recurso: string | null
+          user_agent: string | null
+          usuario_id: string | null
+        }
+        Insert: {
+          accion: string
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          recurso?: string | null
+          user_agent?: string | null
+          usuario_id?: string | null
+        }
+        Update: {
+          accion?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          recurso?: string | null
+          user_agent?: string | null
+          usuario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_log_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chequeos: {
         Row: {
           año: number
