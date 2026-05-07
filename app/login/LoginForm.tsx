@@ -18,6 +18,10 @@ export default function LoginForm() {
       toast.info('Sesión cerrada correctamente')
       window.history.replaceState({}, '', '/login')
     }
+    if (searchParams.get('timeout') === '1') {
+      toast.warning('Tu sesión expiró por inactividad. Inicia sesión nuevamente.')
+      window.history.replaceState({}, '', '/login')
+    }
   }, [searchParams])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

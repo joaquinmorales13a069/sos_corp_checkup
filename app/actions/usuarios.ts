@@ -5,6 +5,8 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { sendCredenciales } from '@/lib/resend'
+import { requireAdmin } from '@/lib/auth'
+import { logAuditEvent } from '@/lib/audit'
 
 function generatePassword(): string {
   // URL-safe base64, ~11 chars — e.g. "aB3xKm9Rp2w"
@@ -12,6 +14,7 @@ function generatePassword(): string {
 }
 
 export async function createUsuario(formData: FormData) {
+  await requireAdmin()
   const nombre = (formData.get('nombre') as string).trim()
   const email = (formData.get('email') as string).trim().toLowerCase()
   const password = formData.get('password') as string
@@ -38,6 +41,8 @@ export async function createUsuario(formData: FormData) {
     await supabase.from('responsable_empresa').insert(rows)
   }
 
+  await logAuditEvent('crear_usuario', email)
+
   // Send credentials email (non-blocking — user is created regardless)
   const emailResult = await sendCredenciales({ nombre, email, password })
   if (emailResult?.error) {
@@ -49,6 +54,7 @@ export async function createUsuario(formData: FormData) {
 }
 
 export async function updateUsuario(id: string, formData: FormData) {
+  await requireAdmin()
   const nombre = (formData.get('nombre') as string).trim()
   if (!nombre) return { error: 'El nombre es requerido' }
 
@@ -56,18 +62,22 @@ export async function updateUsuario(id: string, formData: FormData) {
   const { error } = await supabase.from('profiles').update({ nombre }).eq('id', id)
   if (error) return { error: error.message }
 
+  await logAuditEvent('editar_usuario', id)
   revalidatePath('/dashboard/admin/usuarios')
 }
 
 export async function deleteUsuario(id: string) {
+  await requireAdmin()
   const supabase = createAdminClient()
   const { error } = await supabase.auth.admin.deleteUser(id)
   if (error) return { error: error.message }
 
+  await logAuditEvent('eliminar_usuario', id)
   revalidatePath('/dashboard/admin/usuarios')
 }
 
 export async function updateAsignaciones(usuarioId: string, empresaIds: string[]) {
+  await requireAdmin()
   const supabase = await createClient()
 
   const { error: deleteError } = await supabase
@@ -87,6 +97,7 @@ export async function updateAsignaciones(usuarioId: string, empresaIds: string[]
 }
 
 export async function reenviarCredenciales(usuarioId: string, email: string, nombre: string) {
+  await requireAdmin()
   const newPassword = generatePassword()
 
   // Reset password in Supabase Auth
@@ -97,6 +108,7 @@ export async function reenviarCredenciales(usuarioId: string, email: string, nom
   if (updateError) return { error: updateError.message }
 
   // Send new credentials email
+  await logAuditEvent('editar_usuario', email)
   const emailResult = await sendCredenciales({ nombre, email, password: newPassword })
   if (emailResult?.error) return { error: `Contraseña actualizada pero el email falló: ${emailResult.error}` }
 }

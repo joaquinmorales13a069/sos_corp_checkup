@@ -2,8 +2,11 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { requireAdmin } from '@/lib/auth'
+import { logAuditEvent } from '@/lib/audit'
 
 export async function createSucursal(formData: FormData) {
+  await requireAdmin()
   const nombre = (formData.get('nombre') as string).trim()
   const empresa_id = formData.get('empresa_id') as string
   if (!nombre) return { error: 'El nombre es requerido' }
@@ -13,10 +16,12 @@ export async function createSucursal(formData: FormData) {
   const { error } = await supabase.from('sucursales').insert({ nombre, empresa_id })
   if (error) return { error: error.message }
 
+  await logAuditEvent('crear_sucursal', nombre)
   revalidatePath('/dashboard/admin/sucursales')
 }
 
 export async function updateSucursal(id: string, formData: FormData) {
+  await requireAdmin()
   const nombre = (formData.get('nombre') as string).trim()
   const empresa_id = formData.get('empresa_id') as string
   if (!nombre) return { error: 'El nombre es requerido' }
@@ -29,13 +34,16 @@ export async function updateSucursal(id: string, formData: FormData) {
     .eq('id', id)
   if (error) return { error: error.message }
 
+  await logAuditEvent('editar_sucursal', nombre)
   revalidatePath('/dashboard/admin/sucursales')
 }
 
 export async function deleteSucursal(id: string) {
+  await requireAdmin()
   const supabase = await createClient()
   const { error } = await supabase.from('sucursales').delete().eq('id', id)
   if (error) return { error: error.message }
 
+  await logAuditEvent('eliminar_sucursal', id)
   revalidatePath('/dashboard/admin/sucursales')
 }

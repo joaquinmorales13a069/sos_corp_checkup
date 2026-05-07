@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import { getUser } from '@/lib/auth'
 import LoginForm from './LoginForm'
 import logo from '@/assets/images/logo-SOSMedical.webp'
@@ -33,7 +34,13 @@ export default async function LoginPage() {
         </div>
 
         <p className="text-center text-xs text-sos-gray mt-6">
-          SOS Medical © {new Date().getFullYear()}
+          SOS Medical © {new Date().getFullYear()}{' '}·{' '}
+          <Link
+            href="/politica-privacidad"
+            className="underline hover:text-primary transition-colors"
+          >
+            Política de Privacidad
+          </Link>
         </p>
       </div>
     </main>

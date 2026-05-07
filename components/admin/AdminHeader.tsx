@@ -9,6 +9,7 @@ const titles: Record<string, string> = {
   '/dashboard/admin/usuarios': 'Administrar Usuarios',
   '/dashboard/admin/pre-empleo': 'Administrar chequeos Pre empleo',
   '/dashboard/admin/chequeos': 'Administrar chequeos Periódicos',
+  '/dashboard/admin/ajustes': 'Ajustes de Cuenta',
 }
 
 interface AdminHeaderProps {

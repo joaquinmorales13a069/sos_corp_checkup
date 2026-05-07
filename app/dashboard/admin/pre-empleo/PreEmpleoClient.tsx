@@ -369,7 +369,7 @@ export default function PreEmpleoClient({
                     </td>
                     <td className="px-5 py-3.5 hidden md:table-cell">
                       <a
-                        href={chequeo.drive_url}
+                        href={`/api/drive-redirect?url=${encodeURIComponent(chequeo.drive_url)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
