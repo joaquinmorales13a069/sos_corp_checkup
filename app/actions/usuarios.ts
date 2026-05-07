@@ -108,6 +108,7 @@ export async function reenviarCredenciales(usuarioId: string, email: string, nom
   if (updateError) return { error: updateError.message }
 
   // Send new credentials email
+  await logAuditEvent('editar_usuario', email)
   const emailResult = await sendCredenciales({ nombre, email, password: newPassword })
   if (emailResult?.error) return { error: `Contraseña actualizada pero el email falló: ${emailResult.error}` }
 }
