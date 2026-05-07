@@ -1,5 +1,5 @@
+import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
-import { requireAdmin } from '@/lib/auth'
 import AuditTable from './AuditTable'
 
 const PAGE_SIZE = 50
@@ -14,7 +14,6 @@ type SearchParams = Promise<{
 }>
 
 export default async function RegistrosPage({ searchParams }: { searchParams: SearchParams }) {
-  await requireAdmin()
   const sp = await searchParams
 
   const accion = sp.accion ?? ''
@@ -22,7 +21,8 @@ export default async function RegistrosPage({ searchParams }: { searchParams: Se
   const hasta = sp.hasta ?? ''
   const usuario = sp.usuario ?? ''
   const q = sp.q ?? ''
-  const page = Math.max(0, parseInt(sp.page ?? '0', 10))
+  const rawPage = parseInt(sp.page ?? '0', 10)
+  const page = Math.max(0, isNaN(rawPage) ? 0 : rawPage)
   const offset = page * PAGE_SIZE
 
   const supabase = await createClient()
@@ -51,13 +51,15 @@ export default async function RegistrosPage({ searchParams }: { searchParams: Se
   const { data: rows, count } = await query
 
   return (
-    <AuditTable
-      rows={(rows ?? []) as import('./AuditTable').AuditRow[]}
-      totalCount={count ?? 0}
-      profiles={profiles ?? []}
-      page={page}
-      pageSize={PAGE_SIZE}
-      filters={{ accion, desde, hasta, usuario, q }}
-    />
+    <Suspense fallback={<div className="text-sm text-tertiary p-4">Cargando registros...</div>}>
+      <AuditTable
+        rows={(rows ?? []) as import('./AuditTable').AuditRow[]}
+        totalCount={count ?? 0}
+        profiles={profiles ?? []}
+        page={page}
+        pageSize={PAGE_SIZE}
+        filters={{ accion, desde, hasta, usuario, q }}
+      />
+    </Suspense>
   )
 }

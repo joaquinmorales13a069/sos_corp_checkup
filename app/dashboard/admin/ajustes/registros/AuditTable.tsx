@@ -10,7 +10,7 @@ export type AuditRow = {
   recurso: string | null
   ip_address: string | null
   user_agent: string | null
-  created_at: string
+  created_at: string | null
   usuario_id: string | null
   profiles: { nombre: string } | null
 }
@@ -44,7 +44,8 @@ function actionBadgeClass(accion: string): string {
   return 'bg-surface-container text-on-surface'
 }
 
-function formatDate(iso: string): string {
+function formatDate(iso: string | null): string {
+  if (!iso) return '—'
   return new Date(iso).toLocaleString('es-NI', {
     year: 'numeric',
     month: '2-digit',
@@ -108,7 +109,7 @@ export default function AuditTable({
       </div>
 
       {/* Filters */}
-      <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-4">
+      <div key={JSON.stringify(filters)} className="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           <select
             defaultValue={filters.accion}
