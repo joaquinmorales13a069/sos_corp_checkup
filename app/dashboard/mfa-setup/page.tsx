@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 export default function MFASetupPage() {
   const router = useRouter()
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
   const [qrCode, setQrCode] = useState<string | null>(null)
   const [secret, setSecret] = useState<string | null>(null)
   const [factorId, setFactorId] = useState<string | null>(null)

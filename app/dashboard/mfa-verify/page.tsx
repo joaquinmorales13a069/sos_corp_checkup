@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 export default function MFAVerifyPage() {
   const router = useRouter()
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
   const [factorId, setFactorId] = useState<string | null>(null)
   const [code, setCode] = useState('')
   const [error, setError] = useState<string | null>(null)

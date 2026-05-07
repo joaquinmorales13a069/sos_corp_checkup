@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition, useEffect } from 'react'
+import { useState, useTransition, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import { updateProfile, updateEmail, updatePassword } from '@/app/actions/settings'
@@ -48,7 +48,7 @@ function SectionCard({
 
 function MFASection() {
   const router = useRouter()
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
   const [factorId, setFactorId] = useState<string | null>(null)
   const [unenrolling, setUnenrolling] = useState(false)
   const [confirming, setConfirming] = useState(false)
@@ -66,8 +66,9 @@ function MFASection() {
     const { error } = await supabase.auth.mfa.unenroll({ factorId })
     setUnenrolling(false)
     if (error) { toast.error(error.message); return }
-    toast.success('MFA desactivado. Redirigiendo...')
-    setTimeout(() => { router.push('/login') }, 1500)
+    toast.success('MFA desactivado')
+    await supabase.auth.signOut()
+    router.push('/login')
   }
 
   return (

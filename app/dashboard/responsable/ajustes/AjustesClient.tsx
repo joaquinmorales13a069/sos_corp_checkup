@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition, useEffect } from 'react'
+import { useState, useTransition, useEffect, useMemo } from 'react'
 import { toast } from 'react-toastify'
 import { updateProfile, updateEmail, updatePassword } from '@/app/actions/settings'
 import { LuUser, LuMail, LuLock, LuCheck, LuShield } from 'react-icons/lu'
@@ -46,7 +46,7 @@ function SectionCard({
 }
 
 function MFASectionResponsable() {
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
   const [factorId, setFactorId] = useState<string | null>(null)
   const [mfaActive, setMfaActive] = useState(false)
   const [enrolling, setEnrolling] = useState(false)
