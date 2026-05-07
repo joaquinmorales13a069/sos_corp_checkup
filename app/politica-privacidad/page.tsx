@@ -29,10 +29,10 @@ export default function PoliticaPrivacidadPage() {
         <p className="text-sm text-on-surface-variant leading-relaxed">
           <strong className="text-on-surface">SOS Medical Nicaragua</strong> es el responsable del tratamiento de los datos personales gestionados a través de este sistema. Para consultas relacionadas con el tratamiento de sus datos, puede contactarnos en{' '}
           <a
-            href="mailto:desarrollo@sosmedical.com.ni"
+            href="mailto:informatica@sosmedical.com.ni"
             className="text-primary underline hover:text-primary-container transition-colors"
           >
-            desarrollo@sosmedical.com.ni
+            informatica@sosmedical.com.ni
           </a>
           .
         </p>
@@ -95,10 +95,10 @@ export default function PoliticaPrivacidadPage() {
         <p className="text-sm text-on-surface-variant leading-relaxed">
           Los titulares de los datos tienen derecho a solicitar: acceso, rectificación, supresión, oposición, portabilidad y limitación del tratamiento de sus datos personales. Para ejercer estos derechos, puede contactarnos en{' '}
           <a
-            href="mailto:desarrollo@sosmedical.com.ni"
+            href="mailto:informatica@sosmedical.com.ni"
             className="text-primary underline hover:text-primary-container transition-colors"
           >
-            desarrollo@sosmedical.com.ni
+            informatica@sosmedical.com.ni
           </a>
           .
         </p>
@@ -138,10 +138,10 @@ export default function PoliticaPrivacidadPage() {
         <p className="text-sm text-on-surface-variant leading-relaxed">
           Para consultas relacionadas con el tratamiento de sus datos personales, puede contactar a SOS Medical en:{' '}
           <a
-            href="mailto:desarrollo@sosmedical.com.ni"
+            href="mailto:informatica@sosmedical.com.ni"
             className="text-primary underline hover:text-primary-container transition-colors"
           >
-            desarrollo@sosmedical.com.ni
+            informatica@sosmedical.com.ni
           </a>
           .
         </p>
