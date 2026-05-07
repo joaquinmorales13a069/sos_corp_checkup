@@ -24,8 +24,8 @@
 | 2 | Gobernanza y Cumplimiento | Existencia de políticas formales de seguridad de la información | Documento | ⬜ Pendiente | ISO 27001 A.5 |
 | 4 | Gestión de Accesos | Autenticación multifactor (MFA) | Técnico | ✅ Completo | ISO 27001 A.9 |
 | 5 | Gestión de Accesos | Principio de mínimo privilegio | Técnico + Documento | ✅ Completo | ISO 27001 A.9 |
-| 6 | Aplicación Web | Protección contra OWASP Top 10 | Técnico | ⬜ Pendiente | ISO 27001 A.8, A.14 |
-| 7 | Aplicación Web | Gestión segura de sesiones | Técnico + Documento | ⬜ Pendiente | ISO 27001 A.9, A.14 |
+| 6 | Aplicación Web | Protección contra OWASP Top 10 | Técnico | ✅ Completo | ISO 27001 A.8, A.14 |
+| 7 | Aplicación Web | Gestión segura de sesiones | Técnico + Documento | ✅ Completo | ISO 27001 A.9, A.14 |
 | 8 | Protección de Datos | Cifrado en tránsito (HTTPS/TLS) | Técnico + Documento | ✅ Completo | ISO 27001 A.10 |
 | 9 | Protección de Datos | Cifrado en reposo | Documento | ✅ Completo | ISO 27001 A.10 |
 | 11 | Google Drive | Acceso restringido / No se comparte Drive con otras empresas | Documento | ⬜ Pendiente | ISO 27001 A.9 |
@@ -351,7 +351,7 @@ Documento Word con programa de capacitación:
 | 0 | Auditoría | Todos | ✅ Completo |
 | 1 | Técnico + Documento | 8, 9 | ✅ Completo |
 | 2 | Técnico + Documento | 4, 5 | ✅ Completo |
-| 3 | Técnico + Documento | 6, 7 | ⬜ Pendiente |
+| 3 | Técnico + Documento | 6, 7 | ✅ Completo |
 | 4 | Técnico | 13 | ⬜ Pendiente |
 | 5 | Documento Word | 1, 2 | ⬜ Pendiente |
 | 6 | Documento Word | 11, 12 | ⬜ Pendiente |
