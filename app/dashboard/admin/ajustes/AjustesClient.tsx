@@ -2,10 +2,11 @@
 
 import { useState, useTransition, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { toast } from 'react-toastify'
 import { updateProfile, updateEmail, updatePassword } from '@/app/actions/settings'
 import { createClient } from '@/lib/supabase/client'
-import { LuUser, LuMail, LuLock, LuShield, LuCheck } from 'react-icons/lu'
+import { LuUser, LuMail, LuLock, LuShield, LuCheck, LuClipboardList } from 'react-icons/lu'
 
 const inputClass =
   'w-full px-3 py-2 rounded-lg border border-outline-variant bg-surface-container-low text-sm text-on-surface placeholder:text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors'
@@ -233,6 +234,25 @@ export default function AjustesAdminClient({
 
       <SectionCard icon={LuShield} title="Seguridad" description="Gestión de autenticación de dos factores (MFA)">
         <MFASection />
+      </SectionCard>
+
+      <SectionCard
+        icon={LuClipboardList}
+        title="Registros de Auditoría"
+        description="Historial de accesos, cambios y eventos de seguridad"
+      >
+        <div className="space-y-3">
+          <p className="text-xs text-tertiary">
+            Consulta todos los eventos registrados en el sistema: logins, cambios de datos y accesos a Drive.
+          </p>
+          <Link
+            href="/dashboard/admin/ajustes/registros"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm bg-primary text-on-primary font-medium hover:bg-primary-container transition-colors"
+          >
+            <LuClipboardList size={16} />
+            Ver registros
+          </Link>
+        </div>
       </SectionCard>
     </div>
   )
