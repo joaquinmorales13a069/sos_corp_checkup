@@ -47,7 +47,7 @@ export default function PoliticaPrivacidadPage() {
           A través de este sistema gestionamos los siguientes tipos de datos:
         </p>
         <ul className="text-sm text-on-surface-variant leading-relaxed list-disc list-inside space-y-1 pl-2">
-          <li>Epicrisis de trabajadores de empresas cliente (almacenadas en Google Drive).</li>
+          <li>Epicrisis de trabajadores de empresas cliente (almacenadas en plataforma de almacenamiento en la nube).</li>
           <li>Datos de identificación del responsable de chequeo: nombre, correo electrónico y rol en el sistema.</li>
           <li>Registros de acceso al sistema: fecha, hora y tipo de acción realizada.</li>
         </ul>
@@ -82,7 +82,7 @@ export default function PoliticaPrivacidadPage() {
           El recorrido de los datos dentro del sistema es el siguiente:
         </p>
         <ol className="text-sm text-on-surface-variant leading-relaxed list-decimal list-inside space-y-1 pl-2">
-          <li><strong className="text-on-surface">Administrador SOS Medical</strong> — carga las epicrisis en Google Drive y registra la información en el sistema.</li>
+          <li><strong className="text-on-surface">Administrador SOS Medical</strong> — carga las epicrisis en la plataforma de almacenamiento en la nube y registra la información en el sistema.</li>
           <li><strong className="text-on-surface">Responsable de empresa</strong> — accede al sistema para consultar los resultados de chequeo de su empresa.</li>
           <li><strong className="text-on-surface">Trabajador (titular)</strong> — destinatario final de los resultados de su chequeo médico.</li>
         </ol>
