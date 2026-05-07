@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getProfile } from '@/lib/auth'
+import { logAuditEvent } from '@/lib/audit'
 
 export type LoginState = {
   error?: string
@@ -18,11 +19,14 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
   }
 
   const supabase = await createClient()
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
   if (error) {
+    await logAuditEvent('login_fallido', email)
     return { error: 'Credenciales incorrectas. Verifica tu email y contraseña.' }
   }
+
+  await logAuditEvent('login', email, data.user?.id)
 
   const profile = await getProfile()
   const redirectTo = profile?.rol === 'admin'
@@ -33,6 +37,7 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
 }
 
 export async function logout() {
+  await logAuditEvent('logout')
   const supabase = await createClient()
   await supabase.auth.signOut()
   redirect('/login?logout=1')
