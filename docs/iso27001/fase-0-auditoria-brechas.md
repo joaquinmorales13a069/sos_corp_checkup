@@ -98,6 +98,12 @@ El código dentro de `proxy.ts` es funcional y correcto (refresca sesión Supaba
 
 **Hallazgo:** Ninguna de las 4 server actions de escritura auditadas llama a `requireAdmin()` antes de ejecutar operaciones de escritura en la base de datos. El grep de `requireAdmin|requireResponsable|requireAuth` en `app/actions/` retornó 0 resultados.
 
+**Distinción importante — layouts vs. endpoints de action:**
+
+Los sub-layouts de admin (`app/dashboard/admin/layout.tsx`) llaman a `requireAdmin()` antes de renderizar, lo que protege la navegación UI: un `responsable` que intente navegar a rutas admin es redirigido. Sin embargo, esta protección es exclusivamente a nivel de renderizado de Server Components.
+
+Las Server Actions se exponen como endpoints HTTP independientes en la ruta interna `/next/server-action`. Estos endpoints pueden invocarse directamente con un `fetch` o herramienta HTTP (curl, Burp Suite, etc.) enviando la sesión de un usuario `responsable` autenticado — **sin pasar por ningún layout**. El servidor ejecuta la acción sin verificar el rol porque el guard vive en el layout, no en la action.
+
 Acciones auditadas sin guard explícito de autorización:
 
 | Archivo | Funciones sin guard | Operación |
@@ -105,13 +111,13 @@ Acciones auditadas sin guard explícito de autorización:
 | `empresas.ts` | `createEmpresa`, `updateEmpresa`, `deleteEmpresa` | INSERT/UPDATE/DELETE en `empresas` |
 | `sucursales.ts` | `createSucursal`, `updateSucursal`, `deleteSucursal` | INSERT/UPDATE/DELETE en `sucursales` |
 | `chequeos.ts` | `createChequeo`, `updateChequeo`, `deleteChequeo` | INSERT/UPDATE/DELETE en `chequeos` |
-| `usuarios.ts` | `createUsuario`, `updateUsuario`, `deleteUsuario`, `updateAsignaciones`, `reenviarCredenciales` | Operaciones admin en Auth + profiles |
+| `usuarios.ts` | `createUsuario`, `updateUsuario`, `deleteUsuario`, `updateAsignaciones`, `reenviarCredenciales` | Operaciones admin en Auth API + profiles |
 
-La protección de facto recae en RLS (que bloquea operaciones no-admin en la BD) y en los layouts de Server Components que llaman a `requireAdmin()`. Sin embargo, Server Actions son endpoints HTTP directos (`/next/server-action`) — un usuario `responsable` autenticado podría invocarlas directamente vía fetch y la autorización solo la frena RLS.
+Para `empresas.ts`, `sucursales.ts` y `chequeos.ts`, RLS actúa como segunda línea de defensa: las políticas bloquean escrituras de usuarios con rol `responsable`. La ausencia de guard en la action es un defecto de defensa en profundidad, pero RLS contiene el daño.
 
-**Riesgo particular en `usuarios.ts`:** Usa `createAdminClient()` (service_role) que bypasea RLS. Si un `responsable` invocara directamente `deleteUsuario`, RLS no lo detendría — solo un guard explícito lo haría.
+**Riesgo crítico en `usuarios.ts`:** Este archivo usa `createAdminClient()` (cliente con `service_role`) para llamar a `auth.admin.createUser` y `auth.admin.deleteUser`. La Auth API de Supabase opera fuera de RLS — el `service_role` bypasea todas las políticas de tabla. Si un usuario `responsable` invoca directamente el endpoint de `createUsuario` o `deleteUsuario`, RLS no lo detiene porque la operación nunca toca las políticas de tabla; ocurre en la capa de Auth. Solo un guard explícito (`requireAdmin()`) dentro de la action puede bloquearlo.
 
-**Severidad:** Media-Alta (crítico en acciones que usan service_role)
+**Severidad:** Alta
 **Control ISO:** A.9 — Remediación recomendada en Fase 2
 
 ---
@@ -164,7 +170,7 @@ La protección de facto recae en RLS (que bloquea operaciones no-admin en la BD)
 | 3 | Middleware | `proxy.ts` con export nombrado no es middleware válido en Next.js — completamente inactivo | Alta | Falta | Fase 3 |
 | 4 | Guards de rol | Layout principal `/dashboard` solo verifica sesión, no rol | Media | Parcial | Fase 2 |
 | 5 | Headers HTTP | `next.config.ts` sin headers de seguridad (HSTS, X-Frame-Options, CSP, etc.) | Alta | Falta | Fase 1 (HSTS) / Fase 3 (CSP) |
-| 6 | Autorización actions | Ninguna server action llama `requireAdmin()`; `usuarios.ts` usa service_role sin guard | Media-Alta | Falta | Fase 2 |
+| 6 | Autorización actions | Ninguna server action llama `requireAdmin()`; `usuarios.ts` usa service_role sin guard — endpoints invocables directamente sin pasar por layout | Alta | Falta | Fase 2 |
 | 7 | Validación inputs | Validación presente en todas las actions, parametrized queries, sin SQL injection | — | ✅ Existe | — |
 | 8 | TLS en tránsito | EasyPanel/Traefik activo con Let's Encrypt; HSTS faltante a nivel app | Media | Parcial | Fase 1 |
 | 9 | Cifrado en reposo | Supabase AES-256 + Contabo disk encryption | — | ✅ Existe | — |
