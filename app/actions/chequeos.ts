@@ -2,8 +2,10 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { requireAdmin } from '@/lib/auth'
 
 export async function createChequeo(formData: FormData) {
+  await requireAdmin()
   const sucursal_id = formData.get('sucursal_id') as string
   const añoRaw = formData.get('año') as string
   const drive_url = (formData.get('drive_url') as string).trim()
@@ -33,6 +35,7 @@ export async function createChequeo(formData: FormData) {
 }
 
 export async function updateChequeo(id: string, formData: FormData) {
+  await requireAdmin()
   const sucursal_id = formData.get('sucursal_id') as string
   const añoRaw = formData.get('año') as string
   const drive_url = (formData.get('drive_url') as string).trim()
@@ -63,6 +66,7 @@ export async function updateChequeo(id: string, formData: FormData) {
 }
 
 export async function deleteChequeo(id: string) {
+  await requireAdmin()
   const supabase = await createClient()
   const { error } = await supabase.from('chequeos').delete().eq('id', id)
   if (error) return { error: error.message }
