@@ -41,6 +41,8 @@ export async function createUsuario(formData: FormData) {
     await supabase.from('responsable_empresa').insert(rows)
   }
 
+  await logAuditEvent('crear_usuario', email)
+
   // Send credentials email (non-blocking — user is created regardless)
   const emailResult = await sendCredenciales({ nombre, email, password })
   if (emailResult?.error) {
@@ -48,7 +50,6 @@ export async function createUsuario(formData: FormData) {
     return { warning: `Usuario creado, pero el email no se pudo enviar: ${emailResult.error}` }
   }
 
-  await logAuditEvent('crear_usuario', email)
   revalidatePath('/dashboard/admin/usuarios')
 }
 
