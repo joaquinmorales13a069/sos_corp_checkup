@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { logout } from '@/app/actions/auth'
 import logo from '@/assets/images/logo-SOSMedical.webp'
-import { LuBuilding2, LuBuilding, LuUsers, LuClipboardCheck, LuUserCheck, LuLogOut, LuX } from 'react-icons/lu'
+import { LuBuilding2, LuBuilding, LuUsers, LuClipboardCheck, LuUserCheck, LuLogOut, LuX, LuSettings } from 'react-icons/lu'
 import type { IconType } from 'react-icons'
 
 type NavLink = { kind: 'link'; href: string; label: string; icon: IconType }
@@ -20,6 +20,8 @@ const navItems: NavEntry[] = [
   { kind: 'separator', label: 'Chequeos' },
   { kind: 'link', href: '/dashboard/admin/chequeos', label: 'Periódico', icon: LuClipboardCheck },
   { kind: 'link', href: '/dashboard/admin/pre-empleo', label: 'Pre Empleo', icon: LuUserCheck },
+  { kind: 'separator', label: 'Cuenta' },
+  { kind: 'link', href: '/dashboard/admin/ajustes', label: 'Ajustes', icon: LuSettings },
 ]
 
 interface AdminSidebarProps {
