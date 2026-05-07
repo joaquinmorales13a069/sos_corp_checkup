@@ -47,7 +47,7 @@ export default function PoliticaPrivacidadPage() {
           A través de este sistema gestionamos los siguientes tipos de datos:
         </p>
         <ul className="text-sm text-on-surface-variant leading-relaxed list-disc list-inside space-y-1 pl-2">
-          <li>Epicrisis de trabajadores de empresas cliente (almacenadas en plataforma de almacenamiento en la nube).</li>
+          <li>Vínculos de acceso a expedientes de chequeo médico almacenados en plataforma de almacenamiento en la nube.</li>
           <li>Datos de identificación del responsable de chequeo: nombre, correo electrónico y rol en el sistema.</li>
           <li>Registros de acceso al sistema: fecha, hora y tipo de acción realizada.</li>
         </ul>
@@ -69,7 +69,7 @@ export default function PoliticaPrivacidadPage() {
           4. Base legal
         </h2>
         <p className="text-sm text-on-surface-variant leading-relaxed">
-          El tratamiento de datos se sustenta en la relación contractual entre SOS Medical y las empresas cliente, así como en el consentimiento informado de los trabajadores para el procesamiento de sus datos de salud en el marco de los chequeos médicos empresariales.
+          El tratamiento de datos se sustenta en la relación contractual entre SOS Medical y las empresas cliente para la prestación del servicio de gestión de chequeos médicos empresariales.
         </p>
       </div>
 
@@ -82,9 +82,8 @@ export default function PoliticaPrivacidadPage() {
           El recorrido de los datos dentro del sistema es el siguiente:
         </p>
         <ol className="text-sm text-on-surface-variant leading-relaxed list-decimal list-inside space-y-1 pl-2">
-          <li><strong className="text-on-surface">Administrador SOS Medical</strong> — carga las epicrisis en la plataforma de almacenamiento en la nube y registra la información en el sistema.</li>
-          <li><strong className="text-on-surface">Responsable de empresa</strong> — accede al sistema para consultar los resultados de chequeo de su empresa.</li>
-          <li><strong className="text-on-surface">Trabajador (titular)</strong> — destinatario final de los resultados de su chequeo médico.</li>
+          <li><strong className="text-on-surface">Administrador SOS Medical</strong> — registra empresas, sucursales y vínculos a expedientes de chequeo médico almacenados externamente.</li>
+          <li><strong className="text-on-surface">Responsable de empresa</strong> — accede al sistema para consultar los vínculos a los expedientes de chequeo de su empresa asignada.</li>
         </ol>
       </div>
 
