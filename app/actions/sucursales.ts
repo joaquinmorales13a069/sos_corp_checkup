@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { requireAdmin } from '@/lib/auth'
+import { logAuditEvent } from '@/lib/audit'
 
 export async function createSucursal(formData: FormData) {
   await requireAdmin()
@@ -15,6 +16,7 @@ export async function createSucursal(formData: FormData) {
   const { error } = await supabase.from('sucursales').insert({ nombre, empresa_id })
   if (error) return { error: error.message }
 
+  await logAuditEvent('crear_sucursal', nombre)
   revalidatePath('/dashboard/admin/sucursales')
 }
 
@@ -32,6 +34,7 @@ export async function updateSucursal(id: string, formData: FormData) {
     .eq('id', id)
   if (error) return { error: error.message }
 
+  await logAuditEvent('editar_sucursal', nombre)
   revalidatePath('/dashboard/admin/sucursales')
 }
 
@@ -41,5 +44,6 @@ export async function deleteSucursal(id: string) {
   const { error } = await supabase.from('sucursales').delete().eq('id', id)
   if (error) return { error: error.message }
 
+  await logAuditEvent('eliminar_sucursal', id)
   revalidatePath('/dashboard/admin/sucursales')
 }
