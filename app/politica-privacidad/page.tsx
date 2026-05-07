@@ -124,7 +124,7 @@ export default function PoliticaPrivacidadPage() {
             8. Seguridad de la información
           </h2>
           <p className="text-sm text-on-surface-variant leading-relaxed">
-            Este sistema fue desarrollado siguiendo las directrices de la norma{' '}
+            Este sistema fue desarrollado siguiendo directrices de la norma{' '}
             <strong className="text-on-surface">ISO 27001</strong>, con el objetivo de garantizar la confidencialidad, integridad y disponibilidad de la información médica gestionada.
           </p>
         </div>
