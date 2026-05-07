@@ -43,3 +43,23 @@ export async function requireResponsable() {
   if (profile.rol !== 'responsable') redirect('/dashboard/admin/empresas')
   return profile
 }
+
+export async function requireAdminWithMFA(): Promise<Profile> {
+  const profile = await getProfile()
+  if (!profile) redirect('/login')
+  if (profile.rol !== 'admin') redirect('/dashboard/responsable')
+
+  const supabase = await createClient()
+  const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+  if (error || !data) redirect('/login')
+
+  if (data.nextLevel === 'aal1') {
+    redirect('/dashboard/mfa-setup')
+  }
+
+  if (data.currentLevel !== 'aal2') {
+    redirect('/dashboard/mfa-verify')
+  }
+
+  return profile
+}
