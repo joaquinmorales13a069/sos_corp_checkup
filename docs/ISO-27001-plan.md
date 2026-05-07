@@ -30,7 +30,7 @@
 | 9 | Protección de Datos | Cifrado en reposo | Documento | ✅ Completo | ISO 27001 A.10 |
 | 11 | Google Drive | Acceso restringido / No se comparte Drive con otras empresas | Documento | ⬜ Pendiente | ISO 27001 A.9 |
 | 12 | Google Drive | Auditoría y revisión periódica de permisos | Documento | ⬜ Pendiente | ISO 27001 A.12 |
-| 13 | Registro y Monitoreo | Registro de accesos y descargas | Técnico | ⬜ Pendiente | ISO 27001 A.12 |
+| 13 | Registro y Monitoreo | Registro de accesos y descargas | Técnico | ✅ Completo | ISO 27001 A.12 |
 | 14 | Gestión de Incidentes | Procedimiento documentado de respuesta a incidentes | Documento | ⬜ Pendiente | ISO 27001 A.16 |
 | 15 | Gestión de Incidentes | Notificación de brechas de datos | Documento | ⬜ Pendiente | ISO 27001 A.16 / ISO 27701 |
 | 16 | Continuidad | Backups cifrados y probados | Técnico + Documento | ⬜ Pendiente | ISO 27001 A.17 |
@@ -352,7 +352,7 @@ Documento Word con programa de capacitación:
 | 1 | Técnico + Documento | 8, 9 | ✅ Completo |
 | 2 | Técnico + Documento | 4, 5 | ✅ Completo |
 | 3 | Técnico + Documento | 6, 7 | ✅ Completo |
-| 4 | Técnico | 13 | ⬜ Pendiente |
+| 4 | Técnico | 13 | ✅ Completo |
 | 5 | Documento Word | 1, 2 | ⬜ Pendiente |
 | 6 | Documento Word | 11, 12 | ⬜ Pendiente |
 | 7 | Documento Word | 14, 15 | ⬜ Pendiente |
