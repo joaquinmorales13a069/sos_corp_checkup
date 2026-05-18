@@ -63,7 +63,7 @@ Nota: `unsafe-inline` y `unsafe-eval` en `script-src` son requeridos por Next.js
 
 ```bash
 # Verificar headers de seguridad
-curl -s -o /dev/null -D - https://[dominio]/login | grep -E "content-security-policy|x-frame-options|x-content-type-options|strict-transport-security"
+curl -s -o /dev/null -D - https://empresas.sosmedical.com.ni/login | grep -E "content-security-policy|x-frame-options|x-content-type-options|strict-transport-security"
 ```
 
 ## Referencias

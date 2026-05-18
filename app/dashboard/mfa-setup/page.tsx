@@ -21,7 +21,14 @@ export default function MFASetupPage() {
         router.replace('/dashboard/mfa-verify')
         return
       }
-      const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp' })
+      for (const f of factors?.totp.filter(f => f.status === 'unverified') ?? []) {
+        await supabase.auth.mfa.unenroll({ factorId: f.id })
+      }
+      const { data, error } = await supabase.auth.mfa.enroll({
+        factorType: 'totp',
+        friendlyName: 'SOS Medical',
+        issuer: 'SOS Medical',
+      })
       if (error || !data) {
         setError(error?.message ?? 'Error al iniciar el enrolamiento MFA')
         return
