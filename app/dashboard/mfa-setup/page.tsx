@@ -21,7 +21,7 @@ export default function MFASetupPage() {
         router.replace('/dashboard/mfa-verify')
         return
       }
-      for (const f of factors?.totp.filter(f => f.status === 'unverified') ?? []) {
+      for (const f of factors?.all.filter(f => f.factor_type === 'totp' && f.status !== 'verified') ?? []) {
         await supabase.auth.mfa.unenroll({ factorId: f.id })
       }
       const { data, error } = await supabase.auth.mfa.enroll({
